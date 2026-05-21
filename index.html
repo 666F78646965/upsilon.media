@@ -46,5 +46,250 @@
         </div>
     </div>
     <div class="center-text">ＡＩ ＋ ＨＵＭＡＮ<br> ＣＯＬＬＡＢＯＲＡＴＩＯＮ</div>
+<style>
+    #upsilon-superposition {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+
+    #upsilon-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 20px;
+        padding-right: 25px;
+    }
+
+    @media (min-width: 768px) {
+        #upsilon-grid { grid-template-columns: repeat(6, 1fr); }
+    }
+
+    #upsilon-grid::-webkit-scrollbar { width: 8px; }
+    #upsilon-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    #upsilon-grid::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
+    #upsilon-grid::-webkit-scrollbar-thumb:hover { background: #888; }
+
+    .upsilon-box {
+        background-color: #333;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        position: relative;
+        opacity: 0;
+        transition: opacity 0.8s ease, transform 0.2s ease-out;
+        cursor: pointer;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .upsilon-hub {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        padding: 20%;
+        background-color: #222 !important;
+        transition: background-color 0.3s;
+    }
+    .upsilon-hub-cell {
+        background-color: #666;
+        border-radius: 2px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    .upsilon-hub:hover .upsilon-hub-cell {
+        background-color: #fff;
+        box-shadow: 0 0 8px #fff;
+    }
+
+    .upsilon-tooltip {
+        position: absolute;
+        bottom: 115%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(20, 20, 20, 0.95);
+        padding: 12px;
+        border-radius: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, bottom 0.3s ease;
+        width: max-content;
+        max-width: 280px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        z-index: 10;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    }
+    .upsilon-box:hover .upsilon-tooltip {
+        opacity: 1;
+        bottom: 125%;
+    }
+    .upsilon-tooltip-title {
+        color: #fff;
+        display: block;
+        font-family: sans-serif;
+        font-size: 14px;
+        margin-bottom: 5px;
+        word-break: break-all;
+    }
+    .upsilon-tooltip-desc {
+        color: rgba(255, 255, 255, 0.8);
+        font-family: monospace;
+        display: block;
+        font-size: 12px;
+        margin-bottom: 5px;
+        word-break: break-all;
+    }
+    .upsilon-tooltip-icon {
+        display: inline-block;
+        font-size: 18px;
+    }
+</style>
+
+<div id="upsilon-superposition">
+    <div id="upsilon-grid"></div>
+</div>
+
+<script>
+    const overlayData = [
+        { isHub: true },
+        { img: 'hub1.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub2.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 1 },
+        { img: 'hub3.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub4.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 4 },
+        { img: 'hub5.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub6.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub7.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub8.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub9.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub10.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub11.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub12.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub13.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub14.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub15.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub16.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub17.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub18.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub19.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub20.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub21.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub22.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub23.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub24.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub25.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub26.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub27.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub28.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub29.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub30.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 },
+        { img: 'hub31.png', title: 'AAAAAAAAAAAAAAAAAAAAAAAA', desc: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', status: 0 }
+    ];
+
+    function getStatusSvg(status) {
+        switch(parseInt(status)) {
+            case 1: return '<span style="color: red;">●</span>';
+            case 2: return '<span style="color: orange;">●</span>';
+            case 3: return '<span style="color: yellow;">●</span>';
+            case 4: return '<span style="color: green;">●</span>';
+            case 5: return '<svg width="18" height="18" viewBox="0 0 24 24" fill="#01ee70"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+            default: return '';
+        }
+    }
+
+    const gridContainer = document.getElementById('upsilon-grid');
+    const overlayWrapper = document.getElementById('upsilon-superposition');
+
+    overlayData.forEach((item, index) => {
+        const box = document.createElement('div');
+        box.classList.add('upsilon-box');
+        
+        if (item.isHub) {
+            box.classList.add('upsilon-hub');
+            for(let i=0; i<9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'upsilon-hub-cell';
+                box.appendChild(cell);
+            }
+            box.addEventListener('click', () => {
+                window.location.href = 'https://hub.upsilon.media';
+            });
+        } else {
+            box.style.backgroundImage = `url('${item.img}')`;
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'upsilon-tooltip';
+            
+            const iconHtml = getStatusSvg(item.status);
+            
+            tooltip.innerHTML = `
+                <span class="upsilon-tooltip-title">${item.title}</span>
+                <span class="upsilon-tooltip-desc">${item.desc}</span>
+                <span class="upsilon-tooltip-icon">${iconHtml}</span>
+            `;
+            box.appendChild(tooltip);
+        }
+        gridContainer.appendChild(box);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.tagName && e.target.tagName.toLowerCase() === 'video') {
+            overlayWrapper.style.display = 'flex';
+            
+            const boxes = document.querySelectorAll('.upsilon-box');
+            boxes.forEach((box, i) => {
+                box.style.opacity = '0';
+                setTimeout(() => {
+                    box.style.opacity = '1';
+                }, 50 + (i * 60));
+            });
+        }
+    });
+
+    overlayWrapper.addEventListener('click', function(e) {
+        if (e.target === overlayWrapper) {
+            overlayWrapper.style.display = 'none';
+        }
+    });
+
+    overlayWrapper.addEventListener('mousemove', function(e) {
+        const boxes = document.querySelectorAll('.upsilon-box');
+        boxes.forEach(box => {
+            const rect = box.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const deltaX = (e.clientX - centerX) * 0.08;
+            const deltaY = (e.clientY - centerY) * 0.08;
+            box.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        });
+    });
+
+    overlayWrapper.addEventListener('touchmove', function(e) {
+        const touch = e.touches[0];
+        const boxes = document.querySelectorAll('.upsilon-box');
+        boxes.forEach(box => {
+            const rect = box.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const deltaX = (touch.clientX - centerX) * 0.08;
+            const deltaY = (touch.clientY - centerY) * 0.08;
+            box.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        });
+    });
+
+    overlayWrapper.addEventListener('mouseleave', function() {
+        document.querySelectorAll('.upsilon-box').forEach(box => {
+            box.style.transform = `translate(0px, 0px)`;
+        });
+    });
+</script>
 </body>
 </html>
