@@ -90,16 +90,16 @@
         background-size: cover;
         background-position: center;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        z-index: 1; /* Valeur de base pour le tri */
+        z-index: 1; 
     }
 
-    /*--- CORRECTION : Élever le carré actif au survol ---*/
+    
     .upsilon-box:hover {
         z-index: 10;
-        transform: translateZ(5px); /* Élever légèrement pour l'effet magnétique */
+        transform: translateZ(5px); 
     }
 
-    /*--- CORRECTION : Réduire l'opacité des autres carrés pour focus ---*/
+    
     .upsilon-grid:hover .upsilon-box:not(:hover) {
         opacity: 0.6;
     }
@@ -305,8 +305,8 @@
             const deltaX = (e.clientX - centerX) * 0.08;
             const deltaY = (e.clientY - centerY) * 0.08;
             
-            //--- CORRECTION : Gérer le z-index en JS pour s'assurer qu'il se lève ---*/
-            // Au lieu d'utiliser :hover, on le gère ici pour plus de précision avec l'effet magnétique.
+            
+            
             if (box === e.target.closest('.upsilon-box')) {
                 box.style.zIndex = '10';
                 box.style.transform = `translate(${deltaX}px, ${deltaY}px) translateZ(5px)`;
@@ -327,7 +327,7 @@
             const deltaX = (touch.clientX - centerX) * 0.08;
             const deltaY = (touch.clientY - centerY) * 0.08;
             
-            //--- CORRECTION : Gérer le z-index en tactile ---*/
+            
             if (box === e.target.closest('.upsilon-box')) {
                 box.style.zIndex = '10';
                 box.style.transform = `translate(${deltaX}px, ${deltaY}px) translateZ(5px)`;
@@ -340,7 +340,7 @@
 
     overlayWrapper.addEventListener('mouseleave', function() {
         document.querySelectorAll('.upsilon-box').forEach(box => {
-            //--- CORRECTION : Reset de l'élévation ---*/
+            
             box.style.zIndex = '1';
             box.style.transform = `translate(0px, 0px) translateZ(0px)`;
         });
