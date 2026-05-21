@@ -112,7 +112,7 @@
 
     .upsilon-tooltip {
         position: absolute;
-        bottom: 115%;
+        bottom: 125%;
         left: 50%;
         transform: translateX(-50%);
         background: rgba(20, 20, 20, 0.95);
@@ -120,7 +120,7 @@
         border-radius: 8px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease, bottom 0.3s ease;
+        transition: opacity 0.3s ease;
         width: max-content;
         max-width: 280px;
         text-align: center;
@@ -130,7 +130,6 @@
     }
     .upsilon-box:hover .upsilon-tooltip {
         opacity: 1;
-        bottom: 125%;
     }
     .upsilon-tooltip-title {
         color: #fff;
@@ -236,6 +235,31 @@
                 <span class="upsilon-tooltip-icon">${iconHtml}</span>
             `;
             box.appendChild(tooltip);
+
+            const adjustTooltip = () => {
+                const rect = box.getBoundingClientRect();
+                if (rect.top < 160) {
+                    tooltip.style.bottom = 'auto';
+                    tooltip.style.top = '125%';
+                } else {
+                    tooltip.style.top = 'auto';
+                    tooltip.style.bottom = '125%';
+                }
+                if (rect.left < 140) {
+                    tooltip.style.left = '0';
+                    tooltip.style.transform = 'translateX(0)';
+                } else if (window.innerWidth - rect.right < 140) {
+                    tooltip.style.left = 'auto';
+                    tooltip.style.right = '0';
+                    tooltip.style.transform = 'translateX(0)';
+                } else {
+                    tooltip.style.left = '50%';
+                    tooltip.style.right = 'auto';
+                    tooltip.style.transform = 'translateX(-50%)';
+                }
+            };
+            box.addEventListener('mouseenter', adjustTooltip);
+            box.addEventListener('touchstart', adjustTooltip, {passive: true});
         }
         gridContainer.appendChild(box);
     });
